@@ -1,20 +1,39 @@
 {
-  "name": "project-management",
+  "name": "task-manager-backend",
   "version": "1.0.0",
-  "description": "It is a role based project management backend project",
+  "description": "",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon index.js",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/121ShoryaSingh/task-manager-backend.git"
+  },
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "nodemon": "^3.1.11",
-    "prettier": "3.8.0"
+  "bugs": {
+    "url": "https://github.com/121ShoryaSingh/task-manager-backend/issues"
   },
+  "homepage": "https://github.com/121ShoryaSingh/task-manager-backend#readme",
   "dependencies": {
-    "dotenv": "^17.2.3"
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.10",
+    "nodemon": "^3.1.11",
+    "prettier": "^3.8.1",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }
