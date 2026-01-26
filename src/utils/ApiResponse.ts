@@ -1,11 +1,4 @@
-type ApiResponseTypes = {
-  statusCode: number;
-  data: object;
-  message: string;
-  success: boolean;
-};
-
-class ApiResponse implements ApiResponseTypes {
+class ApiResponse {
   statusCode: number;
   data: object;
   message: string;
