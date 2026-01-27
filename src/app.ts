@@ -1,6 +1,9 @@
 import express, { type Request, type Response } from "express";
 import cors from "cors";
 
+// import routes
+import healthCheckRouter from "./routes/healthcheck.routes.js";
+
 let app = express();
 
 //Basic config
@@ -16,6 +19,8 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
+
+app.use("/api/v1/healthCheck", healthCheckRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World from TypeScript!");
