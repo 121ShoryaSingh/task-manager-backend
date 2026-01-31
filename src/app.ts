@@ -2,7 +2,7 @@ import express, { type Request, type Response } from "express";
 import cors from "cors";
 
 // import routes
-import healthCheckRouter from "./routes/healthcheck.routes.js";
+import router from "./routes/index.js";
 
 let app = express();
 
@@ -20,7 +20,7 @@ app.use(
   }),
 );
 
-app.use("/api/v1/healthCheck", healthCheckRouter);
+app.use("/api/v1", router);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World from TypeScript!");
