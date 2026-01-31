@@ -1,9 +1,40 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Document, Model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 
-const userSchema = new Schema(
+interface IUser extends Document {
+  avatar: {
+    url: string;
+  };
+  username: string;
+  email: string;
+  fullName: string;
+  password: string;
+  isEmailVerified: boolean;
+  refreshToken?: string;
+  forgotPasswordToken?: string;
+  forgotPasswordTokenExpiry?: Date;
+  emailVerificationToken?: string;
+  emailVerificationTokenExpiry?: Date;
+}
+
+interface IUserMethods {
+  isPasswordCorrect(password: string): Promise<boolean>;
+  generateAccessToken(): string;
+  generateRefreshToken(): string;
+  generateTemporaryToken(): {
+    unHashedToken: string;
+    hasheddToken: string;
+    tokenExpiry: number;
+  };
+}
+
+type UserDocument = IUser & IUserMethods;
+
+type UserModel = Model<IUser, {}, IUserMethods>;
+
+const userSchema = new Schema<IUser>(
   {
     avatar: {
       type: {
@@ -61,10 +92,9 @@ const userSchema = new Schema(
   },
 );
 
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 10);
-  next();
 });
 
 userSchema.methods.isPasswordCorrect = async function (password: string) {
