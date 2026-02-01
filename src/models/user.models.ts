@@ -25,7 +25,7 @@ interface IUserMethods {
   generateRefreshToken(): string;
   generateTemporaryToken(): {
     unHashedToken: string;
-    hasheddToken: string;
+    hashedToken: string;
     tokenExpiry: number;
   };
 }
@@ -34,7 +34,7 @@ type UserDocument = IUser & IUserMethods;
 
 type UserModel = Model<IUser, {}, IUserMethods>;
 
-const userSchema = new Schema<IUser>(
+const userSchema = new Schema<IUser, UserModel, IUserMethods>(
   {
     avatar: {
       type: {
@@ -115,6 +115,7 @@ userSchema.methods.generateAccessToken = function (): string {
 
   return jwt.sign(payload, secret, options);
 };
+
 userSchema.methods.generateRefreshToken = function (): string {
   return jwt.sign(
     {
