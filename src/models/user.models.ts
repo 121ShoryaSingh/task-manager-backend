@@ -16,7 +16,7 @@ interface IUser extends Document {
   forgotPasswordToken?: string;
   forgotPasswordTokenExpiry?: Date;
   emailVerificationToken?: string;
-  emailVerificationTokenExpiry?: number;
+  emailVerificationTokenExpiry?: Date;
 }
 
 interface IUserMethods {
@@ -26,7 +26,7 @@ interface IUserMethods {
   generateTemporaryToken(): {
     unHashedToken: string;
     hashedToken: string;
-    tokenExpiry: number;
+    tokenExpiry: Date;
   };
 }
 
@@ -41,7 +41,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
         url: String,
       },
       default: {
-        url: ``,
+        url: "https://placehold.co/200",
       },
     },
     username: {
@@ -84,7 +84,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
       type: String,
     },
     emailVerificationTokenExpiry: {
-      type: Number,
+      type: Date,
     },
   },
   {
@@ -136,7 +136,7 @@ userSchema.methods.generateTemporaryToken = function () {
     .update(unHashedToken)
     .digest("hex");
 
-  const tokenExpiry = Date.now() + 20 * 60 * 1000;
+  const tokenExpiry = new Date(Date.now() + 20 * 60 * 1000);
   return { unHashedToken, hashedToken, tokenExpiry };
 };
 
