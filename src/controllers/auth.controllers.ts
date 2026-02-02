@@ -32,7 +32,7 @@ const generateAccessAndRefreshToken = async (userId: string) => {
 };
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { username, password, email, role } = req.body;
+  const { username, password, email, fullName } = req.body;
 
   const existingUser = await User.findOne({
     $or: [{ username }, { email }],
@@ -46,6 +46,7 @@ const registerUser = asyncHandler(async (req, res) => {
     email,
     password,
     username,
+    fullName,
     isEmailVerified: false,
   });
 
