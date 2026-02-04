@@ -110,7 +110,7 @@ const login = asyncHandler(async (req, res) => {
   );
 
   const loggedInUser = await User.findById(user._id).select(
-    "-password, -refreshToken, -emailVerificationExpiry, -emailVerificationToken",
+    "-password -refreshToken -emailVerificationTokenExpiry -emailVerificationToken",
   );
 
   const options = {
@@ -130,4 +130,4 @@ const login = asyncHandler(async (req, res) => {
     );
 });
 
-export { registerUser };
+export { registerUser, login };
