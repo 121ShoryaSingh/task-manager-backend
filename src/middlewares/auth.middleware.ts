@@ -35,3 +35,5 @@ const veryfyToken = asyncHandler(async (req, res, next) => {
     throw new ApiError(401, "Invaled access token", []);
   }
 });
+
+export { veryfyToken };
