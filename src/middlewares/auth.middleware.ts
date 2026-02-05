@@ -9,7 +9,7 @@ declare module "express-serve-static-core" {
   }
 }
 
-const veryfyToken = asyncHandler(async (req, res, next) => {
+const verifyToken = asyncHandler(async (req, res, next) => {
   const token =
     req.cookies?.accessToken ||
     req.header("Authorization")?.replace("Bearer ", "");
@@ -31,9 +31,10 @@ const veryfyToken = asyncHandler(async (req, res, next) => {
     }
 
     req.user = userData;
+    next();
   } catch (error) {
     throw new ApiError(401, "Invaled access token", []);
   }
 });
 
-export { veryfyToken };
+export { verifyToken };
