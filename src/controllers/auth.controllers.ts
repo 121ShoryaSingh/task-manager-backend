@@ -6,6 +6,7 @@ import {
   sendEmail,
 } from "../utils/MailGen.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import crypto from "crypto";
 
 const generateAccessAndRefreshToken = async (userId: string) => {
   try {
@@ -153,4 +154,22 @@ const logout = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "User logged out"));
 });
 
-export { registerUser, login, logout };
+const getCurrentUser = asyncHandler(async (req, res) => {
+  return res
+    .status(200)
+    .json(new ApiResponse(200, req.user, "Current user fetched successfully"));
+});
+
+const verifyEmail = asyncHandler(async (req, res) => {
+  const { verificationToken } = req.params;
+  if (!verificationToken) {
+    throw new ApiError(400, "Verification token is missing", []);
+  }
+
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(verificationToken as string)
+    .digest("hex");
+});
+
+export { registerUser, login, logout, getCurrentUser };
