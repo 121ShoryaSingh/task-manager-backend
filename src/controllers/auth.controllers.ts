@@ -7,6 +7,7 @@ import {
 } from "../utils/MailGen.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import crypto from "crypto";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 const generateAccessAndRefreshToken = async (userId: string) => {
   try {
@@ -192,4 +193,48 @@ const verifyEmail = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { isEmailVerified: true }, "Email is verified"));
 });
 
-export { registerUser, login, logout, getCurrentUser, verifyEmail };
+const resendEmailVerification = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user?._id);
+
+  if (!user) {
+    throw new ApiError(404, "User does not exist", []);
+  }
+
+  if (user.isEmailVerified) {
+    throw new ApiError(409, "Email is already verified", []);
+  }
+
+  const { hashedToken, unHashedToken, tokenExpiry } =
+    user.generateTemporaryToken();
+
+  user.emailVerificationToken = hashedToken;
+  user.emailVerificationTokenExpiry = tokenExpiry;
+
+  await user.save({ validateBeforeSave: false });
+
+  await sendEmail({
+    email: user?.email,
+    subject: "Please verify your email",
+    mailgenContent: emailVerificationMailgenContent(
+      user.username,
+      `${req.protocol}://${req.get("host")}/api/v1/users/verify-email/${unHashedToken}`,
+    ),
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Mail has been sent to your email ID"));
+});
+
+// const resendEmailVerification = asyncHandler(async (req, res) => {
+
+// });
+
+export {
+  registerUser,
+  login,
+  logout,
+  getCurrentUser,
+  verifyEmail,
+  resendEmailVerification,
+};
