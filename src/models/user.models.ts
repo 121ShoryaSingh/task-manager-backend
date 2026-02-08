@@ -16,7 +16,7 @@ interface IUser extends Document {
   forgotPasswordToken?: string;
   forgotPasswordTokenExpiry?: Date;
   emailVerificationToken?: string;
-  emailVerificationTokenExpiry?: Date;
+  emailVerificationTokenExpiry?: Date | null;
 }
 
 interface IUserMethods {
@@ -85,6 +85,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
     },
     emailVerificationTokenExpiry: {
       type: Date,
+      default: null,
     },
   },
   {
